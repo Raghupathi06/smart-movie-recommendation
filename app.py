@@ -1,9 +1,14 @@
 
+
 import streamlit as st
+import pandas as pd
+from pathlib import Path
 from PIL import Image
 from transformers import pipeline
-import pandas as pd
 
+# -----------------------------
+# MoodFlix configuration
+# -----------------------------
 st.set_page_config(
     page_title="MoodFlix",
     page_icon="🎬",
@@ -11,135 +16,232 @@ st.set_page_config(
 )
 
 st.title("🎬 MoodFlix")
-st.subheader("Facial Expression Movie Recommendation")
+st.subheader("Smart Movie Recommendation System")
 st.write(
-    "Upload a face photo to estimate its visible expression "
-    "and discover movies for your movie night."
+    "Discover movies using a visible facial-expression estimate "
+    "or choose an expression yourself."
+)
+st.caption(
+    "Facial expressions cannot reliably reveal true feelings. "
+    "Images are analyzed only when you choose to analyze them."
 )
 
-# Movie recommendations for each detected expression
-MOVIES = {
-    "happy": [
-        ("The Lion King", "Animation / Adventure"),
-        ("Paddington 2", "Comedy / Family"),
-        ("Inside Out", "Animation / Comedy"),
-        ("Zootopia", "Animation / Mystery"),
-    ],
-    "sad": [
-        ("The Pursuit of Happyness", "Drama"),
-        ("Wonder", "Drama / Family"),
-        ("The Secret Life of Walter Mitty", "Adventure"),
-        ("Finding Nemo", "Animation / Adventure"),
-    ],
-    "angry": [
-        ("The Avengers", "Action / Adventure"),
-        ("Spider-Man: Into the Spider-Verse", "Animation / Action"),
-        ("Kung Fu Panda", "Animation / Comedy"),
-        ("Top Gun: Maverick", "Action / Drama"),
-    ],
-    "fear": [
-        ("Finding Nemo", "Animation / Adventure"),
-        ("Paddington 2", "Comedy / Family"),
-        ("Toy Story", "Animation / Adventure"),
-        ("The Super Mario Bros. Movie", "Animation / Comedy"),
-    ],
-    "surprise": [
-        ("Inception", "Sci-Fi / Thriller"),
-        ("Interstellar", "Sci-Fi / Drama"),
-        ("Knives Out", "Mystery / Comedy"),
-        ("Jumanji: Welcome to the Jungle", "Adventure / Comedy"),
-    ],
-    "disgust": [
-        ("Ratatouille", "Animation / Comedy"),
-        ("Toy Story", "Animation / Adventure"),
-        ("Finding Nemo", "Animation / Adventure"),
-        ("The Intern", "Comedy / Drama"),
-    ],
-    "neutral": [
-        ("The Martian", "Sci-Fi / Adventure"),
-        ("The Grand Budapest Hotel", "Comedy / Adventure"),
-        ("Harry Potter and the Sorcerer's Stone", "Fantasy"),
-        ("How to Train Your Dragon", "Animation / Adventure"),
-    ],
-}
+CSV_PATH = Path(__file__).parent / "moodflix_100_movies_dataset.csv"
 
+
+# -----------------------------
+# Load the 100-movie dataset
+# -----------------------------
+@st.cache_data
+def load_movies():
+    if not CSV_PATH.exists():
+        raise FileNotFoundError(
+            "Dataset not found. Upload "
+            "moodflix_100_movies_dataset.csv beside app.py."
+        )
+
+    df = pd.read_csv(CSV_PATH)
+
+    required = {"title", "genres", "expression"}
+    missing = required - set(df.columns)
+
+    if missing:
+        raise ValueError(
+            "Missing CSV columns: " + ", ".join(sorted(missing))
+        )
+
+    df = df.dropna(subset=["title", "expression"]).copy()
+    df["title"] = df["title"].astype(str).str.strip()
+    df["expression"] = df["expression"].astype(str).str.lower().str.strip()
+    df["genres"] = df["genres"].fillna("Not listed").astype(str)
+
+    return df
+
+
+try:
+    movies_df = load_movies()
+except Exception as error:
+    st.error(f"Unable to load the movie dataset: {error}")
+    st.stop()
+
+
+st.success(f"🎞️ Dataset loaded: {len(movies_df)} movies")
+
+
+# -----------------------------
+# Normalize expression names
+# -----------------------------
+def normalize_expression(label):
+    label = str(label).lower().strip()
+
+    aliases = {
+        "happiness": "happy",
+        "joy": "happy",
+        "sadness": "sad",
+        "anger": "angry",
+        "fearful": "fear",
+        "scared": "fear",
+        "surprised": "surprise",
+        "disgusted": "disgust",
+    }
+
+    return aliases.get(label, label)
+
+
+# -----------------------------
+# Load facial-expression model
+# -----------------------------
 @st.cache_resource
 def load_model():
     return pipeline(
         "image-classification",
-        model="trpakov/vit-face-expression"
+        model="trpakov/vit-face-expression",
+        device=-1
     )
 
-uploaded_file = st.file_uploader(
-    "📷 Upload a face photo",
-    type=["jpg", "jpeg", "png"]
+
+# -----------------------------
+# Camera or photo upload
+# -----------------------------
+st.header("📸 Step 1: Choose a photo")
+
+camera_tab, upload_tab = st.tabs(
+    ["Use camera", "Upload photo"]
 )
 
-if uploaded_file is not None:
-    try:
-        image = Image.open(uploaded_file).convert("RGB")
-        st.image(image, caption="Your uploaded photo",
-                 use_container_width=True)
+image_file = None
 
-        if st.button("🔍 Detect Expression", type="primary"):
-            with st.spinner(
-                "Loading the AI model and analyzing the image..."
-            ):
-                classifier = load_model()
-                predictions = classifier(image)
+with camera_tab:
+    camera_photo = st.camera_input("Take a photo")
 
-            if not predictions:
-                st.error("The model did not return a prediction.")
-                st.stop()
+    if camera_photo is not None:
+        image_file = camera_photo
 
-            # Get the highest-scoring expression
-            best = predictions[0]
-            expression = best["label"].strip().lower()
-            confidence = float(best["score"])
+with upload_tab:
+    uploaded_photo = st.file_uploader(
+        "Choose a face photo",
+        type=["jpg", "jpeg", "png"]
+    )
 
-            st.success(
-                f"Estimated expression: {expression.title()}"
-            )
-            st.metric(
-                "Model confidence",
-                f"{confidence:.1%}"
-            )
+    if uploaded_photo is not None:
+        image_file = uploaded_photo
 
-            st.caption(
-                "This is an AI estimate of visible facial expression, "
-                "not a reliable measure of someone's true feelings."
-            )
 
-            # Recommend movies for the predicted label
-            if expression in MOVIES:
-                recommendations = MOVIES[expression]
-            else:
-                recommendations = MOVIES["neutral"]
-                st.info(
-                    "This expression label is not in the movie list, "
-                    "so general recommendations are shown."
-                )
+# -----------------------------
+# Choose recommendation method
+# -----------------------------
+st.header("🎭 Step 2: Choose an expression")
 
-            st.header("🍿 Recommended Movies")
+method = st.radio(
+    "How would you like to choose?",
+    [
+        "Analyze photo",
+        "Choose manually"
+    ],
+    horizontal=True
+)
 
-            for number, (title, genre) in enumerate(
-                recommendations, start=1
-            ):
-                st.write(f"**{number}. {title}**")
-                st.caption(f"Genre: {genre}")
+expression = None
 
-            with st.expander("See all model predictions"):
-                for item in predictions[:7]:
-                    st.write(
-                        f"{item['label']}: {item['score']:.1%}"
+if method == "Analyze photo":
+    if image_file is not None:
+        try:
+            image = Image.open(image_file).convert("RGB")
+            st.image(image, caption="Selected photo", width=280)
+
+            if st.button("🔍 Analyze expression"):
+                with st.spinner(
+                    "Loading model and estimating expression..."
+                ):
+                    classifier = load_model()
+                    predictions = classifier(image)
+
+                if predictions:
+                    result = predictions[0]
+                    st.session_state["moodflix_expression"] = (
+                        normalize_expression(result["label"])
+                    )
+                    st.session_state["moodflix_score"] = (
+                        result["score"]
                     )
 
-    except Exception as error:
-        st.error(
-            "The model could not run. Check your internet connection "
-            "and installed dependencies, then try again."
-        )
-        st.code(str(error))
+        except Exception:
+            st.error(
+                "Photo analysis failed. Try another photo "
+                "or select an expression manually."
+            )
 
+    if "moodflix_expression" in st.session_state:
+        expression = st.session_state["moodflix_expression"]
+        score = st.session_state.get("moodflix_score", 0.0)
+
+        st.info(f"Estimated visible expression: **{expression}**")
+        st.caption(
+            f"Model score: {score:.1%}. This score is not "
+            "a measure of how accurately your true mood is known."
+        )
+
+else:
+    available_expressions = sorted(
+        movies_df["expression"].dropna().unique().tolist()
+    )
+
+    if available_expressions:
+        expression = st.selectbox(
+            "Select an expression from your dataset",
+            available_expressions
+        )
+
+
+# -----------------------------
+# Recommend movies from CSV
+# -----------------------------
+st.header("🍿 Step 3: Movie recommendations")
+
+if expression:
+    target = normalize_expression(expression)
+
+    matching = movies_df[
+        movies_df["expression"].map(normalize_expression) == target
+    ]
+
+    if matching.empty:
+        st.warning(
+            f"No movies are tagged '{expression}'. "
+            "Here are some movies from your dataset instead."
+        )
+        matching = movies_df
+
+    st.write(f"Found **{len(matching)}** matching movies.")
+
+    for _, movie in matching.iterrows():
+        with st.container(border=True):
+            st.subheader(f"🎬 {movie['title']}")
+
+            if "year" in movies_df.columns:
+                year = movie["year"]
+                if pd.notna(year):
+                    st.write(f"**Year:** {year}")
+
+            st.write(f"**Genres:** {movie['genres']}")
+
+            if "category" in movies_df.columns:
+                category = movie["category"]
+                if pd.notna(category):
+                    st.write(f"**Category:** {category}")
+
+else:
+    st.info(
+        "Take or upload a photo and tap Analyze expression, "
+        "or choose an expression manually to see movie recommendations."
+    )
+
+
+# -----------------------------
+# Footer
+# -----------------------------
 st.divider()
-st.caption("MoodFlix | Smart Movie Recommendation Mini Project")
+st.caption(
+    "MoodFlix | Student mini-project | "
+    "Recommendations use your CSV dataset."
+)
