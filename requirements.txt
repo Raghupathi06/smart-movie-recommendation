@@ -1,5 +1,7 @@
 
+
 streamlit
+pandas
+pillow
 transformers
 torch
-pillow
