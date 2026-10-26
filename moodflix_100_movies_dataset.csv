@@ -1,0 +1,101 @@
+title,year,genres,expression,category
+The Lion King,1994,Animation|Adventure|Drama,happy,Family
+Paddington 2,2017,Adventure|Comedy|Family,happy,Family
+Inside Out,2015,Animation|Comedy|Drama,happy,Family
+Toy Story,1995,Animation|Adventure|Comedy,happy,Family
+The Super Mario Bros. Movie,2023,Animation|Adventure|Comedy,happy,Family
+Finding Nemo,2003,Animation|Adventure|Comedy,happy,Family
+School of Rock,2003,Comedy|Music,happy,Comedy
+Up,2009,Animation|Adventure|Comedy,happy,Family
+The Lego Movie,2014,Animation|Action|Adventure,happy,Family
+The Princess Bride,1987,Adventure|Comedy|Fantasy,happy,Fantasy
+The Mask,1994,Comedy|Crime|Fantasy,happy,Comedy
+Paddington,2014,Comedy|Family,happy,Family
+Sing,2016,Animation|Comedy|Music,happy,Family
+Despicable Me,2010,Animation|Comedy|Family,happy,Family
+"Monsters, Inc.",2001,Animation|Comedy|Family,happy,Family
+The Parent Trap,1998,Comedy|Family,happy,Family
+Mrs. Doubtfire,1993,Comedy|Drama|Family,happy,Family
+Legally Blonde,2001,Comedy|Romance,happy,Comedy
+Elf,2003,Comedy|Family|Fantasy,happy,Family
+Mamma Mia!,2008,Comedy|Musical|Romance,happy,Music
+The Pursuit of Happyness,2006,Biography|Drama,sad,Drama
+Wonder,2017,Drama|Family,sad,Drama
+The Green Mile,1999,Crime|Drama|Fantasy,sad,Drama
+Coco,2017,Animation|Adventure|Drama,sad,Family
+A Beautiful Mind,2001,Biography|Drama,sad,Drama
+Good Will Hunting,1997,Drama|Romance,sad,Drama
+La La Land,2016,Comedy|Drama|Music,sad,Music
+The Boy in the Striped Pajamas,2008,Drama|War,sad,Drama
+The Fault in Our Stars,2014,Drama|Romance,sad,Romance
+Marley & Me,2008,Comedy|Drama|Family,sad,Drama
+A Man Called Otto,2022,Comedy|Drama,sad,Drama
+Dead Poets Society,1989,Comedy|Drama,sad,Drama
+The Notebook,2004,Drama|Romance,sad,Romance
+Bridge to Terabithia,2007,Drama|Family|Fantasy,sad,Fantasy
+The Color Purple,1985,Drama|Musical,sad,Drama
+The Avengers,2012,Action|Adventure|Sci-Fi,angry,Action
+Kung Fu Panda,2008,Animation|Action|Comedy,angry,Family
+Mad Max: Fury Road,2015,Action|Adventure|Sci-Fi,angry,Action
+Creed,2015,Drama|Sport,angry,Sports
+Spider-Man: Into the Spider-Verse,2018,Animation|Action|Adventure,angry,Action
+Top Gun: Maverick,2022,Action|Drama,angry,Action
+Mission: Impossible - Fallout,2018,Action|Adventure|Thriller,angry,Action
+John Wick,2014,Action|Crime|Thriller,angry,Action
+Black Panther,2018,Action|Adventure|Sci-Fi,angry,Action
+The Dark Knight,2008,Action|Crime|Drama,angry,Action
+Gladiator,2000,Action|Adventure|Drama,angry,Action
+Rocky,1976,Drama|Sport,angry,Sports
+The Incredibles,2004,Animation|Action|Adventure,angry,Family
+The Equalizer,2014,Action|Crime|Thriller,angry,Action
+Iron Man,2008,Action|Adventure|Sci-Fi,angry,Action
+The Bourne Identity,2002,Action|Mystery|Thriller,angry,Action
+A Quiet Place,2018,Drama|Horror|Sci-Fi,fear,Thriller
+Coraline,2009,Animation|Fantasy|Horror,fear,Fantasy
+The Sixth Sense,1999,Drama|Mystery|Thriller,fear,Thriller
+Jaws,1975,Adventure|Thriller,fear,Thriller
+Get Out,2017,Horror|Mystery|Thriller,fear,Thriller
+The Conjuring,2013,Horror|Mystery|Thriller,fear,Thriller
+Signs,2002,Drama|Sci-Fi|Thriller,fear,Thriller
+Jurassic Park,1993,Adventure|Sci-Fi|Thriller,fear,Adventure
+The Others,2001,Horror|Mystery|Thriller,fear,Thriller
+A Nightmare on Elm Street,1984,Horror,fear,Thriller
+The Ring,2002,Horror|Mystery,fear,Thriller
+The Visit,2015,Horror|Thriller,fear,Thriller
+The Woman in Black,2012,Drama|Horror|Thriller,fear,Thriller
+Inception,2010,Action|Adventure|Sci-Fi,surprise,Sci-Fi
+Interstellar,2014,Adventure|Drama|Sci-Fi,surprise,Sci-Fi
+Knives Out,2019,Comedy|Crime|Mystery,surprise,Mystery
+The Prestige,2006,Drama|Mystery|Sci-Fi,surprise,Mystery
+Jumanji: Welcome to the Jungle,2017,Action|Adventure|Comedy,surprise,Adventure
+Arrival,2016,Drama|Mystery|Sci-Fi,surprise,Sci-Fi
+The Matrix,1999,Action|Sci-Fi,surprise,Sci-Fi
+The Truman Show,1998,Comedy|Drama|Sci-Fi,surprise,Drama
+Shutter Island,2010,Mystery|Thriller,surprise,Mystery
+Edge of Tomorrow,2014,Action|Sci-Fi,surprise,Sci-Fi
+Source Code,2011,Mystery|Sci-Fi|Thriller,surprise,Sci-Fi
+Everything Everywhere All at Once,2022,Action|Adventure|Sci-Fi,surprise,Sci-Fi
+Tenet,2020,Action|Sci-Fi|Thriller,surprise,Sci-Fi
+Ratatouille,2007,Animation|Comedy|Family,disgust,Family
+The Intern,2015,Comedy|Drama,disgust,Comedy
+Julie & Julia,2009,Biography|Drama|Romance,disgust,Drama
+Chef,2014,Adventure|Comedy|Drama,disgust,Comedy
+The Hundred-Foot Journey,2014,Comedy|Drama,disgust,Drama
+Burnt,2015,Comedy|Drama,disgust,Drama
+Chocolat,2000,Drama|Romance,disgust,Drama
+The Menu,2022,Comedy|Horror|Thriller,disgust,Thriller
+The Martian,2015,Adventure|Drama|Sci-Fi,neutral,Sci-Fi
+The Grand Budapest Hotel,2014,Adventure|Comedy|Crime,neutral,Comedy
+How to Train Your Dragon,2010,Animation|Action|Adventure,neutral,Family
+Harry Potter and the Sorcerer's Stone,2001,Adventure|Family|Fantasy,neutral,Fantasy
+The Secret Life of Walter Mitty,2013,Adventure|Comedy|Drama,neutral,Adventure
+The Shawshank Redemption,1994,Drama,neutral,Drama
+The Lord of the Rings: The Fellowship of the Ring,2001,Action|Adventure|Drama,neutral,Fantasy
+Dune,2021,Action|Adventure|Drama,neutral,Sci-Fi
+Forrest Gump,1994,Comedy|Drama|Romance,neutral,Drama
+The Imitation Game,2014,Biography|Drama|Thriller,neutral,Drama
+The King's Speech,2010,Biography|Drama|History,neutral,Drama
+Hidden Figures,2016,Biography|Drama|History,neutral,Drama
+The Social Network,2010,Biography|Drama,neutral,Drama
+Catch Me If You Can,2002,Biography|Crime|Drama,neutral,Drama
+Apollo 13,1995,Adventure|Drama|History,neutral,Drama
